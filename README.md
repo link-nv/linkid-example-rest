@@ -1,9 +1,18 @@
 linkID REST Example
 ===================
 
-Example linkID REST webapp for using linkID from mobile clients
+Example linkID REST webapp for using linkID from mobile clients.
 
-The webapp has 2 operations, which a mobile app can call to start a linkID authentication and poll for the current state of it. 
+This webapp is configured against the [linkID demo service](https://demo.linkid.be)
+It will authenticate itself as an **example-mobile** app configured in the linkID demo environment.
+
+The webapp has 2 operations, which a mobile app can call to start a linkID authentication and poll for the current state of it.
+
+The webapp talks to linkID using the linkID authentication webservice.
+This webservice is secured using WS-Security with either the username token profile or the X509 token profile.
+The example webapp is configured to use the username token profile.
+
+All this configuration can be found in the **LinkIDResource** class.
 
 ## start
 
