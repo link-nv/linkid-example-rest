@@ -11,19 +11,18 @@ This operation will start a new linkID sesssion, and return the session ID to be
 
 **request**
 
-`http://192.168.0.199:9090/restv1/linkid/start?language=nl`
+```
+http://192.168.0.199:9090/restv1/linkid/start?language=nl
+```
 
 **response**
 
-`
+```
 {"sessionId":"FyHx4l",
  "qrCodeURL":"linkidmauthurldemo://MAUTH/3/FyHx4l/eA==",
  "authenticationContext":"<base64-encoded>",
  "qrCodeImageEncoded":"<base64-encoded>"}
-`
-
-EVtziz
-
+```
 
 ## poll
 
@@ -31,10 +30,12 @@ This operation will poll an existing linkID session and return the current state
 
 **request**
 
-`http://192.168.0.199:9090/restv1/linkid/poll?sessionId=FyHx4l&language=nl`
+```
+http://192.168.0.199:9090/restv1/linkid/poll?sessionId=FyHx4l&language=nl
+```
 
 **response**
 
-`
+```
 {"authenticationState":"EXPIRED","paymentState":null,"paymentMenuURL":null}
-`
+```
