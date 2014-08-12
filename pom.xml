@@ -13,7 +13,7 @@
     <description>An example REST webapp showing the use of the linkID SDK over WS for communication with mobile clients</description>
 
     <groupId>net.lin-k.linkid.client.sdk.examples</groupId>
-    <artifactId>example-rest</artifactId>
+    <artifactId>linkid-example-rest</artifactId>
     <version>2.37</version>
     <packaging>war</packaging>
 
