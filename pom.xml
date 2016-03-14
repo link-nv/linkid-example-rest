@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.lin-k.linkid.client.sdk</groupId>
         <artifactId>examples</artifactId>
-        <version>2.37</version>
+        <version>GIT-SNAPSHOT</version>
     </parent>
 
     <name>linkID Rest Example</name>
@@ -14,7 +14,7 @@
 
     <groupId>net.lin-k.linkid.client.sdk.examples</groupId>
     <artifactId>linkid-example-rest</artifactId>
-    <version>2.37</version>
+    <version>4.1</version>
     <packaging>war</packaging>
 
     <build>
@@ -39,27 +39,41 @@
                             <directory>${basedir}/src/main/webapp</directory>
                             <targetPath />
                             <filtering>true</filtering>
+                            <excludes>
+                                <exclude>**/fonts/**</exclude>
+                            </excludes>
                         </resource>
                     </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <contextReloadable>true</contextReloadable>
+                    <hostName>192.168.5.161</hostName>
+                    <port>8080</port>
+                    <httpsPort>8443</httpsPort>
+                    <keystorePass>secret</keystorePass>
+                    <keystoreFile>/Users/lengavel/Projects/tomcat_ssl/ssl.jks</keystoreFile>
+                    <path>/linkid-example-rest</path>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <properties>
-        <linkID-sdk.version>2.37</linkID-sdk.version>
+        <linkID-sdk.version>4.1</linkID-sdk.version>
         <jersey.version>1.8</jersey.version>
+        <logback.version>1.1.2</logback.version>
+        <slf4j.version>1.6.1</slf4j.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.lin-k.linkid.client.sdk</groupId>
             <artifactId>linkid-sdk</artifactId>
-            <version>${linkID-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.lin-k.linkid.client.sdk</groupId>
-            <artifactId>linkid-sdk-saml2</artifactId>
             <version>${linkID-sdk.version}</version>
         </dependency>
 
@@ -85,6 +99,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

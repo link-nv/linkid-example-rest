@@ -1,0 +1,143 @@
+/* LOGIN ******************/
+
+/* MAIN LOGIN BOX */
+#linkid-login,
+.linkid-login-link-pay{
+    margin: 0 auto;
+    border: 1px solid #969696;
+    max-width: 250px;
+    position: relative;
+    overflow: hidden;
+    background: #74BF43;
+}
+
+/* LOADING ANIMATION */
+#linkid-login .loading:before,
+.linkid-login-link-pay .loading:before{
+
+    content:'';
+    top: 0;
+    left: -10px;
+    position: absolute;
+    height: 100%;
+    width: 10px;
+    background: rgba(255,255,255,0.2);
+    z-index: 1000;
+    -webkit-animation: slide 2s both infinite;
+    -moz-animation: slide 2s both infinite;
+    -ms-animation: slide 2s both infinite;
+    animation: slide 2s both infinite;
+}
+
+#linkid-login img,
+#linkid-login img.linkIDQR{
+    width: 100%;
+    max-width: 250px;
+    border: 10px solid #74BF43;
+}
+#linkid-login img.linkIDQR.failed{
+    border: 10px solid #ff6c64;
+    background: #FFFFFF;
+    /* ANIMATION */
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+#linkid-login .linkIDQRRefresh{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    margin: 40% 10% 10%;
+    z-index: 20000;
+
+}
+#linkid-login .linkIDQRRefresh img{
+    border: none;
+    max-width: 45px;
+    background: rgba(250, 250, 250, 0.7);
+    border-radius: 5px;
+}
+
+#linkid-login .linkIDQR img
+{
+    background: white;
+}
+
+#linkid-login .hideQR img
+{
+    opacity: 0;
+    /* ANIMATION */
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+#linkid-login:hover, .linkID-payment .linkid-login-link:hover{
+    background: #74BF43;
+    box-shadow: none;
+
+}
+#linkid-login a:active {
+    box-shadow: none;
+}
+#linkid-login:active {
+    background: #74BF43;
+}
+
+#linkid-login p{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #FAFAFA;
+    padding: 15px;
+    letter-spacing: 0.02em;
+}
+/* #linkid-login iframe{ */
+/*     background: #FAFAFA; */
+/*     margin: 8px 0 -7px 0; */
+/* } */
+
+
+/* DOWNLOAD linkID BTN'S */
+.dowloadApp
+{
+    margin: 0 auto;
+    padding: 0;
+    text-decoration: none;
+    text-align: center;
+    max-width: 400px;
+}
+.dowloadApp img
+{
+    padding-top: 10px;
+    width: 30%;
+    margin: 0 1%;
+}
+
+
+
+@-webkit-keyframes slide {
+    50% { left: 100%; width: 80px }
+    100% { left: 100%; width: 0px }
+}
+
+@-moz-keyframes slide {
+    50% { left: 100%; width: 80px }
+    100% { left: 100%; width: 0px }
+}
+
+@-ms-keyframes slide {
+    50% { left: 100%; width: 80px }
+    100% { left: 100%; width: 0px }
+}
+
+@keyframes slide {
+    50% { left: 100%; width: 80px }
+    100% { left: 100%; width: 0px }
+}
+

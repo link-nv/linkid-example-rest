@@ -1,0 +1,36 @@
+<!doctype html>
+<html data-ng-app="app">
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-resource.min.js"></script>
+    <script src="app.js"></script>
+    <script src="module/linkIDQR.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="module/linkIDQR.css">
+</head>
+<body>
+<div>
+    <div class="container" data-ng-controller="HomeCtrl">
+        <div class="col-md-offset-4 col-md-4 text-center">
+            <h3>{{title}}</h3>
+        </div>
+
+        <div class="col-md-offset-4 col-md-4" style="margin-top: 20px;">
+
+            <!--linkIDQR-->
+            <div data-linkid-qr
+                 data-display-download-buttons="true"
+                 data-img-url="module/"
+                 data-init-href="/linkid-example-rest/restv1/linkid/start"
+                 data-poll-href="/linkid-example-rest/restv1/linkid/poll"
+                 data-on-success="successMessage()">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
