@@ -26,8 +26,8 @@ public class LinkIDResource {
     //linkID credentials
     private static final String linkIDAppName = "example-mobile";
     private static final String linkIDUsername = "example-mobile";
-    private static final String linkIDPassword = "6E6C1CB7-965C-48A0-B2B0-6B65674BE19F";
-    private static final String linkIDLocation = "https://demo.linkid.be/linkid-ws-username";
+    private static final String linkIDPassword = "28FED436-C8C3-42D4-A4CC-A019FBEEA970";
+    private static final String linkIDLocation = "https://service.linkid.be/linkid-ws-username";
 
     // the message linkID client will display when log-in
     private static final String linkIDAuthenticationMessage = "Example REST app";
