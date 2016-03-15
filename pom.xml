@@ -35,6 +35,21 @@
         <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
     </properties>
 
+    <profiles>
+        <profile>
+            <!-- Wim Vandenhaute local testing profile -->
+            <id>so:14</id>
+            <properties>
+                <linkid-rest-example.hostName>192.168.5.14</linkid-rest-example.hostName>
+                <linkid-rest-example.port>8080</linkid-rest-example.port>
+                <linkid-rest-example.httpsPort>8443</linkid-rest-example.httpsPort>
+                <linkid-rest-example.ssl.location>/Users/wvdhaute/Projects/tomcat_ssl/ssl.jks</linkid-rest-example.ssl.location>
+                <linkid-rest-example.ssl.secret>secret</linkid-rest-example.ssl.secret>
+                <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <resources>
             <resource>
