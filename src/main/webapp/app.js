@@ -1,4 +1,4 @@
-angular.module('app', ['ngResource','linkIDQR'])
+angular.module('app', ['ngResource','ng-linkIDQR'])
 
 .controller('HomeCtrl', function($scope) {
 
@@ -7,6 +7,11 @@ angular.module('app', ['ngResource','linkIDQR'])
     $scope.successMessage = function(){
 
         alert('success!');
+    }
+
+    $scope.successPaymentMessage = function(){
+
+        alert('payment success!');
     }
 
 });

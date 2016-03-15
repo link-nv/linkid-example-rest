@@ -1,24 +1,21 @@
 package net.link.safeonline.sdk.example.rest;
 
-import net.link.safeonline.sdk.api.attribute.LinkIDAttribute;
 import net.link.safeonline.sdk.api.auth.LinkIDAuthenticationContext;
 import net.link.safeonline.sdk.api.auth.LinkIDAuthnResponse;
+import net.link.safeonline.sdk.api.payment.LinkIDCurrency;
+import net.link.safeonline.sdk.api.payment.LinkIDPaymentAmount;
+import net.link.safeonline.sdk.api.payment.LinkIDPaymentContext;
 import net.link.safeonline.sdk.api.ws.linkid.LinkIDServiceClient;
 import net.link.safeonline.sdk.api.ws.linkid.auth.*;
-import net.link.safeonline.sdk.auth.filter.LinkIDLoginManager;
 import net.link.safeonline.sdk.ws.linkid.LinkIDServiceClientImpl;
 import net.link.util.logging.Logger;
 import net.link.util.ws.security.username.AbstractWSSecurityUsernameTokenCallback;
 
 import javax.annotation.Nullable;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 
 @Path("linkid")
@@ -37,11 +34,18 @@ public class LinkIDResource {
 
     // the message linkID client will display when logged in successful
     private static final String linkIDFinishMessage = "we did it, hurray!";
+    private static final String linkIDPaymentFinishMessage = "Payment done, hurray!";
+
+    //
+    //
+    // linkID Authentication example
+    //
+    //
 
     @GET
-    @Path("start")
+    @Path("startAuthentication")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response start(@HeaderParam("user-agent") String userAgent) {
+    public Response startAuthentication(@HeaderParam("user-agent") String userAgent) {
 
         logger.inf("Initiating linkID log-in");
 
@@ -68,9 +72,9 @@ public class LinkIDResource {
     }
 
     @GET
-    @Path("poll")
+    @Path("pollAuthentication")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response poll(@QueryParam("sessionId") String sessionId) {
+    public Response pollAuthentication(@QueryParam("sessionId") String sessionId) {
 
         try {
             LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
@@ -81,12 +85,12 @@ public class LinkIDResource {
 
             LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll(sessionId, null);
 
-            if (pollResponse.getLinkIDAuthenticationState() == LinkIDAuthenticationState.AUTHENTICATED) {
+            if (pollResponse.getAuthenticationState() == LinkIDAuthenticationState.AUTHENTICATED) {
 
-                LinkIDAuthnResponse linkIDAuthnResponse = pollResponse.getLinkIDAuthnResponse();
+                LinkIDAuthnResponse linkIDAuthnResponse = pollResponse.getAuthnResponse();
 
-                if ( null != linkIDAuthnResponse ) {
-                    logger.dbg("username: %s", linkIDAuthnResponse.getUserId());
+                if (null != linkIDAuthnResponse) {
+                    logger.dbg("userID: %s", linkIDAuthnResponse.getUserId());
                 }
 
             }
@@ -99,6 +103,83 @@ public class LinkIDResource {
         }
 
     }
+
+    //
+    //
+    // linkID Payment example
+    //
+    //
+
+    @GET
+    @Path("startPayment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response startPayment(@HeaderParam("user-agent") String userAgent) {
+
+        logger.inf("Initiating linkID log-in");
+
+        try {
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
+                    linkIDLocation,
+                    null,
+                    create(linkIDUsername, linkIDPassword)
+            );
+
+            // Create a paymentContext
+            // let's take NEN EURO for now
+            double amount = 100;
+            LinkIDCurrency currency = LinkIDCurrency.EUR;
+
+            LinkIDPaymentContext linkIDPaymentContext = new LinkIDPaymentContext.Builder(new LinkIDPaymentAmount(amount, currency))
+                    .build();
+
+            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder(linkIDAppName)
+                    .finishedMessage(linkIDPaymentFinishMessage)
+                    .paymentContext( linkIDPaymentContext )
+                    .build();
+
+            LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart(context, userAgent);
+
+            return Response.ok(linkIDAuthSession).build();
+
+        } catch (LinkIDAuthException e) {
+            logger.err("Something went wrong initiating the authentication session");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("pollPayment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response pollPayment(@QueryParam("sessionId") String sessionId) {
+
+        try {
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
+                    linkIDLocation,
+                    null,
+                    create(linkIDUsername, linkIDPassword)
+            );
+
+            LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll(sessionId, null);
+
+            if (pollResponse.getAuthenticationState() == LinkIDAuthenticationState.AUTHENTICATED) {
+
+                LinkIDAuthnResponse linkIDAuthnResponse = pollResponse.getAuthnResponse();
+
+                if (null != linkIDAuthnResponse) {
+                    logger.dbg("userID: %s", linkIDAuthnResponse.getUserId());
+                }
+
+            }
+
+            return Response.ok(pollResponse).cacheControl(CacheControl.valueOf("no-store")).build();
+
+        } catch (LinkIDAuthPollException e) {
+            logger.err("Something went wrong when polling");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
 
     private static AbstractWSSecurityUsernameTokenCallback create(final String username, final String password) {
 

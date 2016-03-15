@@ -17,6 +17,21 @@
     <version>4.1</version>
     <packaging>war</packaging>
 
+    <properties>
+        <linkID-sdk.version>4.2.0</linkID-sdk.version>
+        <jersey.version>1.8</jersey.version>
+        <logback.version>1.1.2</logback.version>
+        <slf4j.version>1.6.1</slf4j.version>
+        <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
+        <javax.servlet.version>2.5</javax.servlet.version>
+
+        <!-- TOMCAT MAVEN PLUGIN CREDENTIALS -->
+        <!--TODO: ADD YOUR CREDENTIALS TO MAKE THE TOMCAT MAVEN PLUGIN WORK-->
+        <linkid-rest-example.hostName>192.168.5.161</linkid-rest-example.hostName>
+        <linkid-rest-example.port>8080</linkid-rest-example.port>
+        <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
+    </properties>
+
     <build>
         <resources>
             <resource>
@@ -49,26 +64,16 @@
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <version>${tomcat7-maven-plugin.version}</version>
                 <configuration>
                     <contextReloadable>true</contextReloadable>
-                    <hostName>192.168.5.161</hostName>
-                    <port>8080</port>
-                    <httpsPort>8443</httpsPort>
-                    <keystorePass>secret</keystorePass>
-                    <keystoreFile>/Users/lengavel/Projects/tomcat_ssl/ssl.jks</keystoreFile>
-                    <path>/linkid-example-rest</path>
+                    <hostName>${linkid-rest-example.hostName}</hostName>
+                    <port>${linkid-rest-example.port}</port>
+                    <path>${linkid-rest-example.contextPath}</path>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <linkID-sdk.version>4.1</linkID-sdk.version>
-        <jersey.version>1.8</jersey.version>
-        <logback.version>1.1.2</logback.version>
-        <slf4j.version>1.6.1</slf4j.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -108,7 +113,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
