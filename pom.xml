@@ -27,8 +27,11 @@
 
         <!-- TOMCAT MAVEN PLUGIN CREDENTIALS -->
         <!--TODO: ADD YOUR CREDENTIALS TO MAKE THE TOMCAT MAVEN PLUGIN WORK-->
-        <linkid-rest-example.hostName>192.168.5.161</linkid-rest-example.hostName>
+        <linkid-rest-example.hostName>192.168.1.255</linkid-rest-example.hostName>
         <linkid-rest-example.port>8080</linkid-rest-example.port>
+        <linkid-rest-example.httpsPort>8443</linkid-rest-example.httpsPort>
+        <linkid-rest-example.ssl.location>/Users/yourname/projects/tomcat_ssl/ssl.jks</linkid-rest-example.ssl.location>
+        <linkid-rest-example.ssl.secret>secret</linkid-rest-example.ssl.secret>
         <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
     </properties>
 
@@ -69,6 +72,9 @@
                     <contextReloadable>true</contextReloadable>
                     <hostName>${linkid-rest-example.hostName}</hostName>
                     <port>${linkid-rest-example.port}</port>
+                    <httpsPort>${linkid-rest-example.httpsPort}</httpsPort>
+                    <keystorePass>${linkid-rest-example.ssl.secret}</keystorePass>
+                    <keystoreFile>${linkid-rest-example.ssl.location}</keystoreFile>
                     <path>${linkid-rest-example.contextPath}</path>
                 </configuration>
             </plugin>
