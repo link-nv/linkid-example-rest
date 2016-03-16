@@ -5,6 +5,7 @@
 
 # Maven2 Relocated Local Repository for Lin.k artifacts.
 /.m2-repo
+/.scripts/*
 
 # IntelliJ
 /.idea/*
