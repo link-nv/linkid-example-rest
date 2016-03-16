@@ -13,6 +13,36 @@
     <version>GIT-SNAPSHOT</version>
     <packaging>war</packaging>
 
+    <!-- DEVELOPERS -->
+    <developers>
+        <developer>
+            <id>lengavel</id>
+            <name>Lennert Gavel</name>
+            <email>lennert@linkid.be</email>
+            <roles>
+                <role>development</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>wvdhaute</id>
+            <name>Wim Vandenhaute</name>
+            <email>wim@linkid.be</email>
+            <roles>
+                <role>development</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <!-- CODE MANAGEMENT -->
+    <scm>
+        <tag>HEAD</tag>
+        <url>https://github.com/link-nv/linkid-example-rest</url>
+        <connection>scm:git:ssh://github.com/link-nv/linkid-example-rest</connection>
+        <developerConnection>scm:git:ssh://github.com/link-nv/linkid-example-rest</developerConnection>
+    </scm>
+
     <!-- DISTRIBUTION AND DEPLOYMENT -->
     <distributionManagement>
         <repository>
@@ -25,6 +55,7 @@
             <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
+
 
     <properties>
         <linkID-sdk.version>4.2.0</linkID-sdk.version>
