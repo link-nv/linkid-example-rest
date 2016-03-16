@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <name>linkID Rest Example</name>
@@ -77,7 +78,7 @@
     <!-- PROFILES -->
     <profiles>
 
-        <!-- JDK profiles -->
+    <!-- JDK profiles -->
         <profile>
             <id>mac</id>
             <activation>
@@ -100,7 +101,20 @@
                 <deploy.url>scpexe://buildserver/Users/devel/maven2/repository</deploy.url>
             </properties>
         </profile>
-    </profiles>
+
+        <!-- Wim Vandenhaute local testing profile -->
+        <profile>
+        <id>so:14</id>
+            <properties>
+                <linkid-rest-example.hostName>192.168.5.14</linkid-rest-example.hostName>
+                <linkid-rest-example.port>8080</linkid-rest-example.port>
+                <linkid-rest-example.httpsPort>8443</linkid-rest-example.httpsPort>
+                <linkid-rest-example.ssl.location>/Users/wvdhaute/Projects/tomcat_ssl/ssl.jks</linkid-rest-example.ssl.location>
+                <linkid-rest-example.ssl.secret>secret</linkid-rest-example.ssl.secret>
+                <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
+            </properties>
+        </profile>
+        </profiles>
 
     <build>
         <resources>
@@ -200,7 +214,7 @@
                 <inherited>true</inherited>
             </plugin>
         </plugins>
-        
+
         <!-- Maven 3.0.3 does not support scp as transport out of the box :| -->
         <extensions>
             <extension>

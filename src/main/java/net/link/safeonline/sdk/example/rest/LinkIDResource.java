@@ -1,30 +1,37 @@
 package net.link.safeonline.sdk.example.rest;
 
+import javax.annotation.Nullable;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import net.link.safeonline.sdk.api.auth.LinkIDAuthenticationContext;
 import net.link.safeonline.sdk.api.auth.LinkIDAuthnResponse;
 import net.link.safeonline.sdk.api.payment.LinkIDCurrency;
 import net.link.safeonline.sdk.api.payment.LinkIDPaymentAmount;
 import net.link.safeonline.sdk.api.payment.LinkIDPaymentContext;
 import net.link.safeonline.sdk.api.ws.linkid.LinkIDServiceClient;
-import net.link.safeonline.sdk.api.ws.linkid.auth.*;
+import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthException;
+import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthPollException;
+import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthPollResponse;
+import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthSession;
+import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthenticationState;
 import net.link.safeonline.sdk.ws.linkid.LinkIDServiceClientImpl;
 import net.link.util.logging.Logger;
 import net.link.util.ws.security.username.AbstractWSSecurityUsernameTokenCallback;
-
-import javax.annotation.Nullable;
-import javax.ws.rs.*;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 
 @Path("linkid")
 public class LinkIDResource {
 
-    private static final Logger logger = Logger.get(LinkIDResource.class);
+    private static final Logger logger = Logger.get( LinkIDResource.class );
 
     //linkID credentials
-    private static final String linkIDAppName = "example-mobile";
+    private static final String linkIDAppName  = "example-mobile";
     private static final String linkIDUsername = "example-mobile";
     private static final String linkIDPassword = "28FED436-C8C3-42D4-A4CC-A019FBEEA970";
     private static final String linkIDLocation = "https://service.linkid.be/linkid-ws-username";
@@ -33,7 +40,7 @@ public class LinkIDResource {
     private static final String linkIDAuthenticationMessage = "Example REST app";
 
     // the message linkID client will display when logged in successful
-    private static final String linkIDFinishMessage = "we did it, hurray!";
+    private static final String linkIDFinishMessage        = "we did it, hurray!";
     private static final String linkIDPaymentFinishMessage = "Payment done, hurray!";
 
     //
@@ -47,27 +54,23 @@ public class LinkIDResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response startAuthentication(@HeaderParam("user-agent") String userAgent) {
 
-        logger.inf("Initiating linkID log-in");
+        logger.inf( "Initiating linkID log-in" );
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
-                    linkIDLocation,
-                    null,
-                    create(linkIDUsername, linkIDPassword)
-            );
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
 
-            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder(linkIDAppName)
-                    .authenticationMessage(linkIDAuthenticationMessage)
-                    .finishedMessage(linkIDFinishMessage)
-                    .build();
+            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( linkIDAppName ).authenticationMessage( linkIDAuthenticationMessage )
+                                                                                                          .finishedMessage( linkIDFinishMessage )
+                                                                                                          .build();
 
-            LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart(context, userAgent);
+            LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart( context, userAgent );
 
-            return Response.ok(linkIDAuthSession).build();
+            return Response.ok( linkIDAuthSession ).build();
 
-        } catch (LinkIDAuthException e) {
-            logger.err("Something went wrong initiating the authentication session");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        catch (LinkIDAuthException ignored) {
+            logger.err( "Something went wrong initiating the authentication session" );
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
         }
     }
 
@@ -77,29 +80,26 @@ public class LinkIDResource {
     public Response pollAuthentication(@QueryParam("sessionId") String sessionId) {
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
-                    linkIDLocation,
-                    null,
-                    create(linkIDUsername, linkIDPassword)
-            );
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
 
-            LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll(sessionId, null);
+            LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll( sessionId, null );
 
             if (pollResponse.getAuthenticationState() == LinkIDAuthenticationState.AUTHENTICATED) {
 
                 LinkIDAuthnResponse linkIDAuthnResponse = pollResponse.getAuthnResponse();
 
                 if (null != linkIDAuthnResponse) {
-                    logger.dbg("userID: %s", linkIDAuthnResponse.getUserId());
+                    logger.dbg( "userID: %s", linkIDAuthnResponse.getUserId() );
                 }
 
             }
 
-            return Response.ok(pollResponse).cacheControl(CacheControl.valueOf("no-store")).build();
+            return Response.ok( pollResponse ).cacheControl( CacheControl.valueOf( "no-store" ) ).build();
 
-        } catch (LinkIDAuthPollException e) {
-            logger.err("Something went wrong when polling");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        catch (LinkIDAuthPollException ignored) {
+            logger.err( "Something went wrong when polling" );
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
         }
 
     }
@@ -115,35 +115,30 @@ public class LinkIDResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response startPayment(@HeaderParam("user-agent") String userAgent) {
 
-        logger.inf("Initiating linkID log-in");
+        logger.inf( "Initiating linkID log-in" );
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
-                    linkIDLocation,
-                    null,
-                    create(linkIDUsername, linkIDPassword)
-            );
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
 
             // Create a paymentContext
             // let's take NEN EURO for now
             double amount = 100;
             LinkIDCurrency currency = LinkIDCurrency.EUR;
 
-            LinkIDPaymentContext linkIDPaymentContext = new LinkIDPaymentContext.Builder(new LinkIDPaymentAmount(amount, currency))
-                    .build();
+            LinkIDPaymentContext linkIDPaymentContext = new LinkIDPaymentContext.Builder( new LinkIDPaymentAmount( amount, currency ) ).build();
 
-            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder(linkIDAppName)
-                    .finishedMessage(linkIDPaymentFinishMessage)
-                    .paymentContext( linkIDPaymentContext )
-                    .build();
+            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( linkIDAppName ).finishedMessage( linkIDPaymentFinishMessage )
+                                                                                                          .paymentContext( linkIDPaymentContext )
+                                                                                                          .build();
 
-            LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart(context, userAgent);
+            LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart( context, userAgent );
 
-            return Response.ok(linkIDAuthSession).build();
+            return Response.ok( linkIDAuthSession ).build();
 
-        } catch (LinkIDAuthException e) {
-            logger.err("Something went wrong initiating the authentication session");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        catch (LinkIDAuthException ignored) {
+            logger.err( "Something went wrong initiating the authentication session" );
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
         }
     }
 
@@ -153,33 +148,29 @@ public class LinkIDResource {
     public Response pollPayment(@QueryParam("sessionId") String sessionId) {
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl(
-                    linkIDLocation,
-                    null,
-                    create(linkIDUsername, linkIDPassword)
-            );
+            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
 
-            LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll(sessionId, null);
+            LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll( sessionId, null );
 
             if (pollResponse.getAuthenticationState() == LinkIDAuthenticationState.AUTHENTICATED) {
 
                 LinkIDAuthnResponse linkIDAuthnResponse = pollResponse.getAuthnResponse();
 
                 if (null != linkIDAuthnResponse) {
-                    logger.dbg("userID: %s", linkIDAuthnResponse.getUserId());
+                    logger.dbg( "userID: %s", linkIDAuthnResponse.getUserId() );
                 }
 
             }
 
-            return Response.ok(pollResponse).cacheControl(CacheControl.valueOf("no-store")).build();
+            return Response.ok( pollResponse ).cacheControl( CacheControl.valueOf( "no-store" ) ).build();
 
-        } catch (LinkIDAuthPollException e) {
-            logger.err("Something went wrong when polling");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+        catch (LinkIDAuthPollException ignored) {
+            logger.err( "Something went wrong when polling" );
+            return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
         }
 
     }
-
 
     private static AbstractWSSecurityUsernameTokenCallback create(final String username, final String password) {
 

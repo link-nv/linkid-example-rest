@@ -1,19 +1,18 @@
 package net.link.safeonline.sdk.example.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
 
 @ApplicationPath("restv1")
 public class RestApplication extends Application {
 
-
     @Override
     public Set<Class<?>> getClasses() {
 
-        Set<Class<?>> classes = new HashSet<Class<?>>();
+        Set<Class<?>> classes = new HashSet<>();
 
         //
         // Resources
