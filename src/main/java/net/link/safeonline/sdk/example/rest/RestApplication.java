@@ -12,7 +12,7 @@ public class RestApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
 
-        Set<Class<?>> classes = new HashSet<>();
+        Set<Class<?>> classes = new HashSet<Class<?>>();
 
         //
         // Resources
