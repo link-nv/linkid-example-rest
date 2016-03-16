@@ -3,18 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>net.lin-k.linkid.client.sdk</groupId>
-        <artifactId>examples</artifactId>
-        <version>GIT-SNAPSHOT</version>
-    </parent>
-
     <name>linkID Rest Example</name>
     <description>An example REST webapp showing the use of the linkID SDK over WS for communication with mobile
         clients
     </description>
 
-    <groupId>net.lin-k.linkid.client.sdk.examples</groupId>
+    <groupId>be.linkid</groupId>
     <artifactId>linkid-example-rest</artifactId>
     <version>GIT-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -33,7 +27,6 @@
     </distributionManagement>
 
     <properties>
-
         <linkID-sdk.version>4.2.0</linkID-sdk.version>
         <jersey.version>1.8</jersey.version>
         <logback.version>1.1.2</logback.version>
@@ -74,6 +67,7 @@
             <id>release</id>
             <properties>
                 <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
+                <deploy.url>scpexe://buildserver/Users/devel/maven2/repository</deploy.url>
             </properties>
         </profile>
     </profiles>
