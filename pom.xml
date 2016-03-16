@@ -10,14 +10,30 @@
     </parent>
 
     <name>linkID Rest Example</name>
-    <description>An example REST webapp showing the use of the linkID SDK over WS for communication with mobile clients</description>
+    <description>An example REST webapp showing the use of the linkID SDK over WS for communication with mobile
+        clients
+    </description>
 
     <groupId>net.lin-k.linkid.client.sdk.examples</groupId>
     <artifactId>linkid-example-rest</artifactId>
-    <version>4.1</version>
+    <version>GIT-SNAPSHOT</version>
     <packaging>war</packaging>
 
+    <!-- DISTRIBUTION AND DEPLOYMENT -->
+    <distributionManagement>
+        <repository>
+            <id>buildserver-release-repository</id>
+            <url>${deploy.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>buildserver-snapshot-repository</id>
+            <url>${deploy.url}</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
+
         <linkID-sdk.version>4.2.0</linkID-sdk.version>
         <jersey.version>1.8</jersey.version>
         <logback.version>1.1.2</logback.version>
@@ -27,13 +43,40 @@
 
         <!-- TOMCAT MAVEN PLUGIN CREDENTIALS -->
         <!--TODO: ADD YOUR CREDENTIALS TO MAKE THE TOMCAT MAVEN PLUGIN WORK-->
-        <linkid-rest-example.hostName>192.168.5.161</linkid-rest-example.hostName>
+        <linkid-rest-example.hostName>192.168.1.255</linkid-rest-example.hostName>
         <linkid-rest-example.port>8080</linkid-rest-example.port>
         <linkid-rest-example.httpsPort>8443</linkid-rest-example.httpsPort>
-        <linkid-rest-example.ssl.location>/Users/lengavel/projects/tomcat_ssl/ssl.jks</linkid-rest-example.ssl.location>
+        <linkid-rest-example.ssl.location>/Users/name/projects/tomcat_ssl/ssl.jks</linkid-rest-example.ssl.location>
         <linkid-rest-example.ssl.secret>secret</linkid-rest-example.ssl.secret>
         <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
     </properties>
+
+    <!-- PROFILES -->
+    <profiles>
+
+        <!-- JDK profiles -->
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <boot.classpath>
+                    /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/Library//Java/JavaVirtualMachines/1.6.0_29-b11-402.jdk/Contents/Classes/classes.jar:/Library//Java/JavaVirtualMachines/1.6.0_29-b11-402.jdk/Contents/Classes/jsse.jar:/Library//Java/JavaVirtualMachines/1.6.0_29-b11-402.jdk/Contents/Classes/jce.jar
+                </boot.classpath>
+            </properties>
+        </profile>
+
+        <!-- Production profile: service linkID & DocData production -->
+        <profile>
+            <id>release</id>
+            <properties>
+                <linkid-rest-example.contextPath>/linkid-example-rest</linkid-rest-example.contextPath>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <resources>
@@ -44,7 +87,7 @@
                     <include>**</include>
                 </includes>
             </resource>
-       </resources>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -55,7 +98,7 @@
                     <webResources>
                         <resource>
                             <directory>${basedir}/src/main/webapp</directory>
-                            <targetPath />
+                            <targetPath/>
                             <filtering>true</filtering>
                             <excludes>
                                 <exclude>**/fonts/**</exclude>
@@ -77,6 +120,60 @@
                     <keystoreFile>${linkid-rest-example.ssl.location}</keystoreFile>
                     <path>${linkid-rest-example.contextPath}</path>
                 </configuration>
+            </plugin>
+
+
+            <!-- MAVEN RELEASE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <developmentVersion>GIT-SNAPSHOT</developmentVersion>
+                    <localCheckout>true</localCheckout>
+                    <preparationGoals>clean install</preparationGoals>
+                    <goals>deploy</goals>
+                    <updateBranchVersions>true</updateBranchVersions>
+                    <updateWorkingCopyVersions>false</updateWorkingCopyVersions>
+                    <branchName>${project.version}-maint</branchName>
+                    <mavenExecutorId>forked-path</mavenExecutorId>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>bmp</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jpeg</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>gif</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>crt</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <!-- fix for building with Java 7 -->
+                    <compilerArguments>
+                        <bootclasspath>${boot.classpath}</bootclasspath>
+                    </compilerArguments>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <meminitial>32m</meminitial>
+                    <maxmem>128m</maxmem>
+                    <encoding>UTF-8</encoding>
+                    <optimize>true</optimize>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+                <inherited>true</inherited>
             </plugin>
         </plugins>
     </build>
