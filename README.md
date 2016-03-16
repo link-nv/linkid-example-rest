@@ -21,7 +21,16 @@ https://demo.linkid.be/linkid-example-rest/restv1/linkid/startAuthentication
 **response**
 
 ```
-{"qrCodeInfo":{"qrCodeURL":"linkidmauth://MAUTH/3/UYWOP8/eA==","qrContent":"MAUTH/3/UYWOP8/eA==","mobile":false,"qrEncoded":"...","qrImage":"..."},"sessionId":"UYWOP8"}
+{
+"sessionId":"UYWOP8",
+"qrCodeInfo":{
+  "qrCodeURL":"linkidmauth://MAUTH/3/UYWOP8/eA==",
+  "qrContent":"MAUTH/3/UYWOP8/eA==",
+  "mobile":false,
+  "qrEncoded":"...",
+  "qrImage":"..."
+   }
+}
 ```
 
 ## pollAuthentication
@@ -37,5 +46,10 @@ https://demo.linkid.be/linkid-example-rest/restv1/linkid/pollAuthentication?sess
 **response**
 
 ```
-{"authnResponse":null,"authenticationState":"STARTED","paymentState":null,"paymentMenuURL":null}
+{
+"authnResponse":null,
+"authenticationState":"STARTED",
+"paymentState":null,
+"paymentMenuURL":null
+}
 ```
