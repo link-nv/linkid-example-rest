@@ -1,50 +1,41 @@
 linkID REST Example
 ===================
 
-Example linkID REST webapp for using linkID from mobile clients.
+This webapp shows how to integrate linkID using the [linkID angularJS directive](https://github.com/link-nv/linkid-sdk/wiki/angularJS) and as well shows the REST calls implementation of the backend which can also be used for a mobile app integration. Checkout the [linkID iOS example](https://github.com/link-nv/linkid-example-ios).
 
-This webapp is configured against the [linkID demo service](https://demo.linkid.be)
-It will authenticate itself as an **example-mobile** app configured in the linkID demo environment.
+The [LinkIDResource](https://github.com/link-nv/linkid-example-rest/blob/master/src/main/java/net/link/safeonline/sdk/example/rest/LinkIDResource.java) class shows the startAuthentication and pollAuthentication calls. 
 
-The webapp has 2 operations, which a mobile app can call to start a linkID authentication and poll for the current state of it.
+The webapp is configured to use the [linkID production service](https://service.linkid.be) using the example-mobile test application so you can test this out immediately.
+A live version of it can be found [here](https://demo.linkid.be/linkid-example-rest).
 
-The webapp talks to linkID using the linkID authentication webservice.
-This webservice is secured using WS-Security with either the username token profile or the X509 token profile.
-The example webapp is configured to use the username token profile.
+## startAuthentication
 
-All this configuration can be found in the **LinkIDResource** class.
-
-## start
-
-This operation will start a new linkID sesssion, and return the session ID to be used in later polling, the QR code's URL and the base64 encoded QR code image.
+This operation will start a new linkID authentication
 
 **request**
 
 ```
-http://192.168.0.199:9090/restv1/linkid/start?language=nl
+https://demo.linkid.be/linkid-example-rest/restv1/linkid/startAuthentication
 ```
 
 **response**
 
 ```
-{"sessionId":"FyHx4l",
- "qrCodeURL":"linkidmauthurldemo://MAUTH/3/FyHx4l/eA==",
- "authenticationContext":"<base64-encoded>",
- "qrCodeImageEncoded":"<base64-encoded>"}
+{"qrCodeInfo":{"qrCodeURL":"linkidmauth://MAUTH/3/UYWOP8/eA==","qrContent":"MAUTH/3/UYWOP8/eA==","mobile":false,"qrEncoded":"...","qrImage":"..."},"sessionId":"UYWOP8"}
 ```
 
-## poll
+## pollAuthentication
 
-This operation will poll an existing linkID session and return the current state of it.
+This operation will poll an existing linkID authentication and return the current state of it.
 
 **request**
 
 ```
-http://192.168.0.199:9090/restv1/linkid/poll?sessionId=FyHx4l&language=nl
+https://demo.linkid.be/linkid-example-rest/restv1/linkid/pollAuthentication?sessionId=FyHx4l
 ```
 
 **response**
 
 ```
-{"authenticationState":"EXPIRED","paymentState":null,"paymentMenuURL":null}
+{"authnResponse":null,"authenticationState":"STARTED","paymentState":null,"paymentMenuURL":null}
 ```
