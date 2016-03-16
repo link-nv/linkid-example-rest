@@ -40,7 +40,7 @@ This operation will poll an existing linkID authentication and return the curren
 **request**
 
 ```
-https://demo.linkid.be/linkid-example-rest/restv1/linkid/pollAuthentication?sessionId=FyHx4l
+https://demo.linkid.be/linkid-example-rest/restv1/linkid/pollAuthentication?sessionId=UYWOP8
 ```
 
 **response**
