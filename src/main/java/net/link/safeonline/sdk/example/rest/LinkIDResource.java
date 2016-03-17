@@ -1,6 +1,5 @@
 package net.link.safeonline.sdk.example.rest;
 
-import javax.annotation.Nullable;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -20,21 +19,15 @@ import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthPollException;
 import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthPollResponse;
 import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthSession;
 import net.link.safeonline.sdk.api.ws.linkid.auth.LinkIDAuthenticationState;
-import net.link.safeonline.sdk.ws.linkid.LinkIDServiceClientImpl;
+import net.link.safeonline.sdk.configuration.LinkIDConfig;
+import net.link.safeonline.sdk.ws.LinkIDServiceFactory;
 import net.link.util.logging.Logger;
-import net.link.util.ws.security.username.AbstractWSSecurityUsernameTokenCallback;
 
 
 @Path("linkid")
 public class LinkIDResource {
 
     private static final Logger logger = Logger.get( LinkIDResource.class );
-
-    //linkID credentials
-    private static final String linkIDAppName  = "example-mobile";
-    private static final String linkIDUsername = "example-mobile";
-    private static final String linkIDPassword = "28FED436-C8C3-42D4-A4CC-A019FBEEA970";
-    private static final String linkIDLocation = "https://service.linkid.be/linkid-ws-username";
 
     // the message linkID client will display when log-in
     private static final String linkIDAuthenticationMessage = "Example REST app";
@@ -57,11 +50,10 @@ public class LinkIDResource {
         logger.inf( "Initiating linkID log-in" );
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
+            LinkIDServiceClient linkIDServiceClient = LinkIDServiceFactory.getLinkIDService( LinkIDConfig.get() );
 
-            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( linkIDAppName ).authenticationMessage( linkIDAuthenticationMessage )
-                                                                                                          .finishedMessage( linkIDFinishMessage )
-                                                                                                          .build();
+            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( LinkIDConfig.get().name() ).authenticationMessage(
+                    linkIDAuthenticationMessage ).finishedMessage( linkIDFinishMessage ).build();
 
             LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart( context, userAgent );
 
@@ -80,7 +72,7 @@ public class LinkIDResource {
     public Response pollAuthentication(@QueryParam("sessionId") String sessionId) {
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
+            LinkIDServiceClient linkIDServiceClient = LinkIDServiceFactory.getLinkIDService( LinkIDConfig.get() );
 
             LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll( sessionId, null );
 
@@ -118,7 +110,7 @@ public class LinkIDResource {
         logger.inf( "Initiating linkID log-in" );
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
+            LinkIDServiceClient linkIDServiceClient = LinkIDServiceFactory.getLinkIDService( LinkIDConfig.get() );
 
             // Create a paymentContext
             // let's take NEN EURO for now
@@ -127,9 +119,8 @@ public class LinkIDResource {
 
             LinkIDPaymentContext linkIDPaymentContext = new LinkIDPaymentContext.Builder( new LinkIDPaymentAmount( amount, currency ) ).build();
 
-            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( linkIDAppName ).finishedMessage( linkIDPaymentFinishMessage )
-                                                                                                          .paymentContext( linkIDPaymentContext )
-                                                                                                          .build();
+            LinkIDAuthenticationContext context = new LinkIDAuthenticationContext.Builder( LinkIDConfig.get().name() ).finishedMessage(
+                    linkIDPaymentFinishMessage ).paymentContext( linkIDPaymentContext ).build();
 
             LinkIDAuthSession linkIDAuthSession = linkIDServiceClient.authStart( context, userAgent );
 
@@ -148,7 +139,7 @@ public class LinkIDResource {
     public Response pollPayment(@QueryParam("sessionId") String sessionId) {
 
         try {
-            LinkIDServiceClient linkIDServiceClient = new LinkIDServiceClientImpl( linkIDLocation, null, create( linkIDUsername, linkIDPassword ) );
+            LinkIDServiceClient linkIDServiceClient = LinkIDServiceFactory.getLinkIDService( LinkIDConfig.get() );
 
             LinkIDAuthPollResponse pollResponse = linkIDServiceClient.authPoll( sessionId, null );
 
@@ -170,35 +161,5 @@ public class LinkIDResource {
             return Response.status( Response.Status.INTERNAL_SERVER_ERROR ).build();
         }
 
-    }
-
-    private static AbstractWSSecurityUsernameTokenCallback create(final String username, final String password) {
-
-        return new AbstractWSSecurityUsernameTokenCallback() {
-            @Override
-            public String getUsername() {
-
-                return username;
-            }
-
-            @Override
-            public String getPassword() {
-
-                return password;
-            }
-
-            @Nullable
-            @Override
-            public String handle(final String username) {
-
-                return null;
-            }
-
-            @Override
-            public boolean isInboundHeaderOptional() {
-
-                return true;
-            }
-        };
     }
 }
